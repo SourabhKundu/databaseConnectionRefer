@@ -35,19 +35,31 @@ public class Main {
 
             //Hashmap
             HashMap<String,Integer> Matches_Played_perYear = new HashMap<String,Integer>();
+            HashMap<String,Integer> Matches_won_Overall = new HashMap<String,Integer>();
 
             while((line=br.readLine())!=null){
                 String[] match = line.split(splitBy);
 
                 int count = Matches_Played_perYear.containsKey(match[1]) ? Matches_Played_perYear.get(match[1]) : 0;
                 Matches_Played_perYear.put(match[1], count + 1);
+                int count1 = Matches_won_Overall.containsKey(match[10]) ? Matches_won_Overall.get(match[10]) : 0;
+                Matches_won_Overall.put(match[10], count1 + 1);
                             }
             Set<String> keys = Matches_Played_perYear.keySet();
+            Set<String> keys2 = Matches_won_Overall.keySet();
+
             for(String i : keys) {
                 if (i.startsWith("2")) {
                     System.out.println("Year "+i + " Total Matches Played:" + Matches_Played_perYear.get(i));
                 }
                 else{
+                    continue;
+                }
+            }
+            for(String j : keys2) {
+                if (!j.startsWith("winner")) {
+                    System.out.println("Team " + j + " Won " + Matches_won_Overall.get(j) + " matches.");
+                } else {
                     continue;
                 }
             }
