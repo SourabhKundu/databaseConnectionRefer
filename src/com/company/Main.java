@@ -38,6 +38,7 @@ public class Main {
             HashMap<String,Integer> Matches_won_Overall = new HashMap<String,Integer>();
             HashMap<String,Integer> Extra_runs = new HashMap<String,Integer>();
             HashMap<String,Integer> Economical_Bowler = new HashMap<String,Integer>();
+            HashMap<String , Integer> Eco2 = new HashMap<String,Integer>();
 
             while((line=br.readLine())!=null){
                 String[] match = line.split(splitBy);
@@ -64,9 +65,18 @@ public class Main {
                     continue;
                 }
                 if (!delivery[17].startsWith("total")){
-                    int Runs2 = Integer.parseInt(delivery[17]);
-                    int count4 = Economical_Bowler.containsKey(delivery[8]) ? Economical_Bowler.get(delivery[8]) : 0;
-                    Economical_Bowler.put(delivery[8],(count4+Runs2));
+                    int matches_played1 = Integer.parseInt(delivery[0]);
+                    if(519<=matches_played1 && matches_played1<=576) {
+
+                        int Runs2 = Integer.parseInt(delivery[17]);
+                        int count4 = Economical_Bowler.containsKey(delivery[8]) ? Economical_Bowler.get(delivery[8]) : 0;
+                        Economical_Bowler.put(delivery[8], (count4+1) );
+                        int count5 = Eco2.containsKey(delivery[8]) ? Eco2.get(delivery[8]): 0;
+
+                        Eco2.put(delivery[8],count4+Runs2);
+
+
+                    }
                 }
 
 
@@ -76,8 +86,11 @@ public class Main {
             Set<String> keys2 = Matches_won_Overall.keySet();
             Set<String> keys3 = Extra_runs.keySet();
             Set<String> keys4 = Economical_Bowler.keySet();
+
             for(String l : keys4){
-                System.out.println("Bowler "+l + " Runs "+Economical_Bowler.get(l));
+                int Economy = Economical_Bowler.get(l)/6;
+                Economy = Eco2.get(l)/Economy;
+                System.out.println("Bowler "+ l + " Runs "+Economy);
             }
             for(String k : keys3){
                 //System.out.println("Team "+k+"  :  "+ Extra_runs.get(k));
