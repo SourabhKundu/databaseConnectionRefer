@@ -39,6 +39,8 @@ public class Main {
             HashMap<String,Integer> Extra_runs = new HashMap<String,Integer>();
             HashMap<String,Integer> Economical_Bowler = new HashMap<String,Integer>();
             HashMap<String , Integer> Eco2 = new HashMap<String,Integer>();
+            HashMap<String, Integer> Total_Runs = new HashMap<String,Integer>();
+
 
             while((line=br.readLine())!=null){
                 String[] match = line.split(splitBy);
@@ -54,6 +56,9 @@ public class Main {
 
                 if(!delivery[16].startsWith("extra_runs") ) {
                     int matches_played = Integer.parseInt(delivery[0]);
+                    int Runs3 = Integer.parseInt(delivery[17]);
+                    int count5 = Total_Runs.containsKey(delivery[6]) ? Total_Runs.get(delivery[6]) :0;
+                    Total_Runs.put(delivery[6], count5+Runs3);
                     if(577<=matches_played && matches_played<=636){
                     int Runs = Integer.parseInt(delivery[16]);
 
@@ -86,6 +91,10 @@ public class Main {
             Set<String> keys2 = Matches_won_Overall.keySet();
             Set<String> keys3 = Extra_runs.keySet();
             Set<String> keys4 = Economical_Bowler.keySet();
+            Set<String> Keys5 = Total_Runs.keySet();
+            for (String f : Keys5){
+                System.out.println("Batsman "+f+ "Made "+Total_Runs.get(f)+" runs.");
+            }
 
             for(String l : keys4){
                 int Economy = Economical_Bowler.get(l)/6;
