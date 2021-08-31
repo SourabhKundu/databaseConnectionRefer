@@ -19,18 +19,8 @@ public class Main {
         try {
             String line = "";
             String splitBy = ",";
-            //filepath
-            String deliveries = "src/com/company/deliveries.csv";
-            String matches = "src/com/company/matches.csv";
-            File file1 = new File(matches);
-            FileReader fr1 = new FileReader(file1);
-            File file2 = new File(deliveries);
-            FileReader fr2 = new FileReader(file2);
 
-//Reader
-            BufferedReader br = new BufferedReader(fr1);
 
-            BufferedReader br1 = new BufferedReader(fr2);
 
 
             //Hashmap
