@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class ReadFile{
 
@@ -34,7 +36,9 @@ public class Main {
     public static final int totalRuns = 17;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        List<Matches> matchesData=getMatchesData();
+        noOfMatchesWonByTeams(matchesData);
 
         }
     private static List<Matches> getMatchesData() throws IOException {
@@ -108,6 +112,41 @@ public class Main {
         }
         return deliveriesData;
     }
+    private static void noOfMatchesWonByTeams(List<Matches> matchesData) {
+        Map<String, Map<String,Integer>> noOfMatchesWonByTeams=new HashMap<>();
+
+        for(Matches list:matchesData)
+        {
+            if(noOfMatchesWonByTeams.containsKey(list.getWinner()))
+            {
+                Map<String,Integer> seasonWiseWinningCount=noOfMatchesWonByTeams.get(list.getWinner());
+
+                if(seasonWiseWinningCount.containsKey(list.getSeason()))
+                {
+                    int get=seasonWiseWinningCount.get(list.getSeason());
+                    seasonWiseWinningCount.put(list.getSeason(),get+1);
+                }
+                else
+                {
+                    seasonWiseWinningCount.put(list.getSeason(),1);
+                }
+                noOfMatchesWonByTeams.put(list.getWinner(),seasonWiseWinningCount);
+            }
+            else
+            {
+                Map<String,Integer> seasonWiseWin=new HashMap<>();
+                seasonWiseWin.put(list.getSeason(),1);
+                noOfMatchesWonByTeams.put(list.getWinner(),seasonWiseWin);
+            }
+        }
+        for (String keys : noOfMatchesWonByTeams.keySet())
+        {
+            System.out.println(keys + ":"+ noOfMatchesWonByTeams.get(keys));
+        }
+
+
+    }
+
 
 
 
