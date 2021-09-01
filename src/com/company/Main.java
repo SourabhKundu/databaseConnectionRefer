@@ -233,7 +233,7 @@ public class Main {
                 top5EconomyBowler.put(topEconomyBowler, min);
             }
         }
-        System.out.println("Top 7 economy bowler in 2015: ");
+        System.out.println("Top 7 economy bowlers in 2015: ");
         for (String keys : top5EconomyBowler.keySet()) {
             System.out.println(keys + ":" + top5EconomyBowler.get(keys));
         }
