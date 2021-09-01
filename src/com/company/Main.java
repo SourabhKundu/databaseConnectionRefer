@@ -39,8 +39,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
         List<Matches> matchesData=getMatchesData();
         noOfMatchesWonByTeams(matchesData);
+        noOfMatchesPlayedPerYear(matchesData);
 
-        }
+    }
     private static List<Matches> getMatchesData() throws IOException {
         String path="src/com/company/matches.csv";
         List<Matches> matchesData=new ArrayList<>();
@@ -141,11 +142,67 @@ public class Main {
         }
         for (String keys : noOfMatchesWonByTeams.keySet())
         {
-            System.out.println(keys + ":"+ noOfMatchesWonByTeams.get(keys));
+            //System.out.println(keys + ":"+ noOfMatchesWonByTeams.get(keys));
+        }
+    }
+    private static void noOfMatchesPlayedPerYear(List<Matches> matchesData) {
+        Map<String,Integer> noOfMatchesPlayedPerYear=new HashMap<>();
+
+        for(Matches list:matchesData)
+        {
+            if(noOfMatchesPlayedPerYear.containsKey(list.getSeason()))
+            {
+                int get=noOfMatchesPlayedPerYear.get(list.getSeason());
+                noOfMatchesPlayedPerYear.put(list.getSeason(),get+1);
+            }
+            else
+            {
+                noOfMatchesPlayedPerYear.put(list.getSeason(),1);
+            }
+        }
+        System.out.println("No. of matches played per year :");
+        for (String keys : noOfMatchesPlayedPerYear.keySet())
+        {
+            System.out.println(keys + ":"+ noOfMatchesPlayedPerYear.get(keys));
+        }
+    }
+
+
+    private static Map<Integer, String> getMatchID_Season(List<Matches> matchesData) {
+        Map<Integer,String> matches=new HashMap<>();
+
+        for(Matches list:matchesData)
+        {
+            matches.put(list.getMatch_Id(),list.getSeason());
         }
 
-
+        return matches;
     }
+    private static void extraRunsConcededPerTeamIn2016(List<Deliveries> deliveryData, Map<Integer, String> matchID_season) {
+        Map<String,Integer> extraRunsConcededPerTeam=new HashMap<>();
+
+        for(Deliveries list:deliveryData)
+        {
+            if(matchID_season.get(list.getMatch_id()).equals("2016"))
+            {
+                if(extraRunsConcededPerTeam.containsKey(list.getBatting_team()))
+                {
+                    int get=extraRunsConcededPerTeam.get(list.getBatting_team());
+                    extraRunsConcededPerTeam.put(list.getBatting_team(), get+list.getExtra_runs());
+                }
+                else
+                {
+                    extraRunsConcededPerTeam.put(list.getBatting_team(), list.getExtra_runs());
+                }
+            }
+        }
+
+        System.out.println("In 2016, extra runs conceded per team : ");
+        System.out.println(extraRunsConcededPerTeam);
+        System.out.println("");
+    }
+
+
 
 
 
