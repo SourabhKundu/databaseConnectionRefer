@@ -1,11 +1,10 @@
 package com.company;
+
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.lang.String;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 class ReadFile{
 
@@ -38,9 +37,9 @@ public class Main {
     public static void main(String[] args) {
 
         }
-    private static List<Match> getMatchesData() throws IOException {
+    private static List<Matches> getMatchesData() throws IOException {
         String path="src/com/company/matches.csv";
-        List<Match> matchesData=new ArrayList<>();
+        List<Matches> matchesData=new ArrayList<>();
 
         BufferedReader br=new BufferedReader(new FileReader(path));
 
@@ -57,7 +56,7 @@ public class Main {
 
             String[] data=line.split(",");
 
-            Match match=new Match();
+            Matches match=new Matches();
 
             match.setMatch_Id(Integer.parseInt(data[match_Id]));
             match.setSeason(data[season]);
@@ -80,6 +79,36 @@ public class Main {
         }
         return matchesData;
     }
+    private static List<Deliveries> getDeliveriesData() throws IOException {
+        List<Deliveries> deliveriesData=new ArrayList<>();
+
+        String path="src/com/company/deliveries.csv";
+        BufferedReader br=new BufferedReader(new FileReader(path));
+
+        String line="";
+        int l=0;
+        while((line= br.readLine())!=null)
+        {
+            String[] data=line.split(",");
+            if(l==0)
+            {
+                l=1;
+                continue;
+            }
+
+            Deliveries delivery=new Deliveries();
+            delivery.setMatch_id(Integer.parseInt(data[match_Id]));
+            delivery.setInning(Integer.parseInt(data[inning]));
+            delivery.setBatting_team(data[battingTeam]);
+            delivery.setExtra_runs(Integer.parseInt(data[extraRuns]));
+            delivery.setBowler(data[bowler]);
+            delivery.setTotal_runs(Integer.parseInt(data[totalRuns]));
+
+            deliveriesData.add(delivery);
+        }
+        return deliveriesData;
+    }
+
 
 
 
