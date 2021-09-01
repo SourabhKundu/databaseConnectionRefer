@@ -13,8 +13,8 @@ public class Deliveries {
     private int is_super_over;
     private int wide_runs;
     private int bye_runs;
-    private int legbye_runs;
-    private int noball_runs;
+    private int legBye_runs;
+    private int noBall_runs;
     private int penalty_runs;
     private int extra_runs;
     private int batsman_runs;
@@ -116,20 +116,20 @@ public class Deliveries {
         this.bye_runs = bye_runs;
     }
 
-    public int getLegbye_runs() {
-        return legbye_runs;
+    public int getLegBye_runs() {
+        return legBye_runs;
     }
 
-    public void setLegbye_runs(int legbye_runs) {
-        this.legbye_runs = legbye_runs;
+    public void setLegBye_runs(int legBye_runs) {
+        this.legBye_runs = legBye_runs;
     }
 
-    public int getNoball_runs() {
-        return noball_runs;
+    public int getNoBall_runs() {
+        return noBall_runs;
     }
 
-    public void setNoball_runs(int noball_runs) {
-        this.noball_runs = noball_runs;
+    public void setNoBall_runs(int noBall_runs) {
+        this.noBall_runs = noBall_runs;
     }
 
     public int getPenalty_runs() {
