@@ -13,9 +13,30 @@ class ReadFile{
 
 
 public class Main {
+    public static final int match_Id = 0;
+    public static final int season = 1;
+    public static final int city= 2;
+    public static final int date = 3;
+    public static final int team_1 = 4;
+    public static final int team_2 = 5;
+    public static final int tossWinner = 6;
+    public static final int tossDecision = 7;
+    public static final int result = 8;
+    public static final int dl_Applied = 9;
+    public static final int winByRuns = 11;
+    public static final int winByWickets = 12;
+    public static final int playerOfTheMatch = 13;
+    public static final int venue = 14;
+    public static final int winner = 10;
+    public static final int inning = 1;
+    public static final int battingTeam = 2;
+    public static final int extraRuns = 16;
+    public static final int bowler = 8;
+    public static final int totalRuns = 17;
+
 
     public static void main(String[] args) {
-	// write your code here
+
         try {
             String line = "";
             String splitBy = ",";
