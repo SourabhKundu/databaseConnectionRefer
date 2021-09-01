@@ -3,15 +3,7 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-class ReadFile{
-
-}
-
+import java.util.*;
 
 public class Main {
     public static final int match_Id = 0;
@@ -42,7 +34,8 @@ public class Main {
         Map<Integer,String> matchID_Season=getMatchID_Season(matchesData);
         noOfMatchesWonByTeams(matchesData);
         noOfMatchesPlayedPerYear(matchesData);
-        extraRunsConcededPerTeamIn2016(deliveryData,matchID_Season);
+        extraRunsPerTeamIn2016(deliveryData,matchID_Season);
+        topEconomicalBowlerIn2015(deliveryData,matchID_Season);
 
     }
     private static List<Matches> getMatchesData() throws IOException {
@@ -76,7 +69,7 @@ public class Main {
             match.setToss_decision(data[tossDecision]);
             match.setResult(data[result]);
             match.setDl_applied(Integer.parseInt(data[dl_Applied]));
-            if(data[winner].equals("") || data[winner]==null) match.setWinner("no result");
+            if(data[winner].equals("") || data[winner]==null) match.setWinner("Draw");
             else match.setWinner(data[winner]);
             match.setWin_By_Runs(Integer.parseInt(data[winByRuns]));
             match.setWin_By_wickets(Integer.parseInt(data[winByWickets]));
@@ -181,36 +174,78 @@ public class Main {
 
         return matches;
     }
-    private static void extraRunsConcededPerTeamIn2016(List<Deliveries> deliveryData, Map<Integer, String> matchID_season) {
-        Map<String,Integer> extraRunsConcededPerTeam=new HashMap<>();
+    private static void extraRunsPerTeamIn2016(List<Deliveries> deliveryData, Map<Integer, String> matchID_season) {
+        Map<String,Integer> extraRunsPerTeam=new HashMap<>();
 
         for(Deliveries list:deliveryData)
         {
             if(matchID_season.get(list.getMatch_id()).equals("2016"))
             {
-                if(extraRunsConcededPerTeam.containsKey(list.getBatting_team()))
+                if(extraRunsPerTeam.containsKey(list.getBatting_team()))
                 {
-                    int get=extraRunsConcededPerTeam.get(list.getBatting_team());
-                    extraRunsConcededPerTeam.put(list.getBatting_team(), get+list.getExtra_runs());
+                    int get=extraRunsPerTeam.get(list.getBatting_team());
+                    extraRunsPerTeam.put(list.getBatting_team(), get+list.getExtra_runs());
                 }
                 else
                 {
-                    extraRunsConcededPerTeam.put(list.getBatting_team(), list.getExtra_runs());
+                    extraRunsPerTeam.put(list.getBatting_team(), list.getExtra_runs());
+                }
+            }
+        }
+        System.out.println("In 2016, extra runs per team : ");
+        for (String keys : extraRunsPerTeam.keySet())
+        {
+            System.out.println(keys + ":"+ extraRunsPerTeam.get(keys));
+        }
+    }
+
+    private static void topEconomicalBowlerIn2015(List<Deliveries> deliveryData, Map<Integer, String> matchID_season) {
+        Map<String, int[]> map = new HashMap<>();
+
+        for (Deliveries list : deliveryData) {
+            if (matchID_season.get(list.getMatch_id()).equals("2015")) {
+                if (map.containsKey(list.getBowler())) {
+                    int[] get = map.get(list.getBowler());
+                    get[0] += 1;
+                    get[1] += list.getTotal_runs();
+                    map.put(list.getBowler(), get);
+                } else {
+                    int[] get = new int[2];
+                    get[0] = 1;
+                    get[1] = list.getTotal_runs();
+                    map.put(list.getBowler(), get);
                 }
             }
         }
 
-        System.out.println("In 2016, extra runs per team : ");
-        for (String keys : extraRunsConcededPerTeam.keySet())
-        {
-            System.out.println(keys + ":"+ extraRunsConcededPerTeam.get(keys));
+        String topEconomyBowler = "";
+        float min = Float.MAX_VALUE;
+        Map<String, Float> top5EconomyBowler = new HashMap<String, Float>();
+
+        for (Map.Entry<String, int[]> it : map.entrySet()) {
+            int[] get = it.getValue();
+            float over = get[0] / 6;
+            float economy = get[1] / over;
+
+            if (min > economy) {
+                min = economy;
+                topEconomyBowler = it.getKey();
+                top5EconomyBowler.put(topEconomyBowler, min);
+            }
         }
+        System.out.println("Top 7 economy bowler in 2015: ");
+        for (String keys : top5EconomyBowler.keySet()) {
+            System.out.println(keys + ":" + top5EconomyBowler.get(keys));
+        }
+
+
+
+
+
     }
 
 
 
 
 
-
-
-}
+    }
