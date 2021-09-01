@@ -38,8 +38,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         List<Matches> matchesData=getMatchesData();
+        List<Deliveries> deliveryData=getDeliveriesData();
+        Map<Integer,String> matchID_Season=getMatchID_Season(matchesData);
         noOfMatchesWonByTeams(matchesData);
         noOfMatchesPlayedPerYear(matchesData);
+        extraRunsConcededPerTeamIn2016(deliveryData,matchID_Season);
 
     }
     private static List<Matches> getMatchesData() throws IOException {
@@ -197,9 +200,11 @@ public class Main {
             }
         }
 
-        System.out.println("In 2016, extra runs conceded per team : ");
-        System.out.println(extraRunsConcededPerTeam);
-        System.out.println("");
+        System.out.println("In 2016, extra runs per team : ");
+        for (String keys : extraRunsConcededPerTeam.keySet())
+        {
+            System.out.println(keys + ":"+ extraRunsConcededPerTeam.get(keys));
+        }
     }
 
 
