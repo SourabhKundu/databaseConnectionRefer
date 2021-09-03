@@ -179,20 +179,21 @@ public class Main {
                 }
                 if (bowlersOvers.get(item.getBowler()) == null) {
                     bowlersOvers.put(item.getBowler(), 0);
-                } else if (bowlersOvers.get(item.getBowler()) != null && item.getBall() == 6) {
+                } else if (bowlersOvers.get(item.getBowler()) != null ) {
 
-                    bowlersOvers.put(item.getBowler(), bowlersOvers.get(item.getBowler()) + 1);
+                    bowlersOvers.put(item.getBowler(), bowlersOvers.get(item.getBowler())+1);
                 }
             }
         }
         for (Map.Entry<String, Integer> item : bowlersRuns.entrySet()) {
-            bowlersEconomy.put(Double.parseDouble(String.valueOf(bowlersRuns.get(item.getKey()))) / bowlersOvers.get(item.getKey()), item.getKey());
+            bowlersEconomy.put(Double.parseDouble(String.valueOf(bowlersRuns.get(item.getKey()))) / (bowlersOvers.get(item.getKey())/6), item.getKey());
         }
 
         System.out.println("Top economical bowler in IPL 2015");
 
+
         for (Map.Entry<Double, String> item : bowlersEconomy.entrySet()) {
-            System.out.println(item.getValue());
+            System.out.println(item.getValue() +" with an economy of "+ item.getKey());
             System.out.println("--------------------------------------------------------------------------------");
             break;
         }
