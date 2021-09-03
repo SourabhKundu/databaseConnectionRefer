@@ -2,7 +2,7 @@ package com.company;
 
 public class Matches {
     private int match_Id;
-    private String season;
+    private int season;
     private String city;
     private String date;
     private String team1;
@@ -27,11 +27,11 @@ public class Matches {
         this.match_Id = match_Id;
     }
 
-    public String getSeason() {
+    public int getSeason() {
         return season;
     }
 
-    public void setSeason(String season) {
+    public void setSeason(int season) {
         this.season = season;
     }
 

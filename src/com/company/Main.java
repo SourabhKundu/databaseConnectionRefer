@@ -6,33 +6,26 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
-    public static final int match_Id = 0;
-    public static final int season = 1;
-    public static final int city= 2;
-    public static final int date = 3;
-    public static final int team_1 = 4;
-    public static final int team_2 = 5;
-    public static final int tossWinner = 6;
-    public static final int tossDecision = 7;
-    public static final int result = 8;
-    public static final int dl_Applied = 9;
-    public static final int winByRuns = 11;
-    public static final int winByWickets = 12;
-    public static final int playerOfTheMatch = 13;
-    public static final int venue = 14;
-    public static final int winner = 10;
-    public static final int inning = 1;
-    public static final int battingTeam = 2;
-    public static final int extraRuns = 16;
-    public static final int bowler = 8;
-    public static final int totalRuns = 17;
+    public static final int MATCH_ID = 0;
+    public static final int SEASON = 1;
+    public static final int MATCH_WINNER = 10;
+    public static final int PLAYER_OF_MATCH = 13;
+
+    public static final int DELIVERY_MATCH_ID = 0;
+    public static final int BOWLING_TEAM = 3;
+    public static final int BALL = 5;
+    public static final int BOWLER = 8;
+    public static final int WIDE_RUNS = 10;
+    public static final int NOBALL_RUNS = 13;
+    public static final int BATSMAN_RUNS = 15;
+    public static final int EXTRA_RUNS = 16;
+    public static final int TOTAL_RUNS = 17;
 
 
     public static void main(String[] args) throws IOException {
-        List<Matches> matchesData=getMatchesData();
-        List<Deliveries> deliveryData=getDeliveriesData();
-        Map<Integer,String> matchID_Season=getMatchID_Season(matchesData);
-        noOfMatchesWonByTeams(matchesData);
+        List<Matches> matchesData = getMatchesData();
+        List<Deliveries> deliveryData = getDeliveriesData();
+        findNoOfMatchesWonByTeams(matchesData);
         noOfMatchesPlayedPerYear(matchesData);
         extraRunsPerTeamIn2016(deliveryData,matchID_Season);
         topEconomicalBowlerIn2015(deliveryData,matchID_Season);
@@ -45,37 +38,24 @@ public class Main {
         BufferedReader br=new BufferedReader(new FileReader(path));
 
         String line;
-        int l=0;
+        int skipLine=0;
 
         while((line=br.readLine())!=null)
         {
-            if(l==0)
+            if(skipLine==0)
             {
-                l=1;
+                skipLine=1;
                 continue;
             }
 
-            String[] data=line.split(",");
-
+            String[] singleMatch = line.split(",");
             Matches match=new Matches();
 
-            match.setMatch_Id(Integer.parseInt(data[match_Id]));
-            match.setSeason(data[season]);
-            match.setCity(data[city]);
-            match.setDate(data[date]);
-            match.setTeam1(data[team_1]);
-            match.setTeam2(data[team_2]);
-            match.setToss_winner(data[tossWinner]);
-            match.setToss_decision(data[tossDecision]);
-            match.setResult(data[result]);
-            match.setDl_applied(Integer.parseInt(data[dl_Applied]));
-            if(data[winner].equals("") || data[winner]==null) match.setWinner("Draw");
-            else match.setWinner(data[winner]);
-            match.setWin_By_Runs(Integer.parseInt(data[winByRuns]));
-            match.setWin_By_wickets(Integer.parseInt(data[winByWickets]));
-            match.setPlayerOfTheMatch(data[playerOfTheMatch]);
-            match.setVenue(data[venue]);
-
+            match.setMatch_Id(Integer.parseInt(singleMatch[MATCH_ID]));
+            match.setSeason(Integer.parseInt(singleMatch[SEASON]));
+            if(singleMatch[MATCH_WINNER].equals("") || singleMatch[MATCH_WINNER]==null) match.setWinner("Draw");
+            else match.setWinner(singleMatch[MATCH_WINNER]);
+            match.setPlayerOfTheMatch(singleMatch[PLAYER_OF_MATCH]);
             matchesData.add(match);
         }
         return matchesData;
@@ -87,81 +67,67 @@ public class Main {
         BufferedReader br=new BufferedReader(new FileReader(path));
 
         String line="";
-        int l=0;
+        int skipLine=0;
         while((line= br.readLine())!=null)
         {
-            String[] data=line.split(",");
-            if(l==0)
+            String[] deliveryData = line.split(",");
+            if(skipLine==0)
             {
-                l=1;
+                skipLine=1;
                 continue;
             }
 
             Deliveries delivery=new Deliveries();
-            delivery.setMatch_id(Integer.parseInt(data[match_Id]));
-            delivery.setInning(Integer.parseInt(data[inning]));
-            delivery.setBatting_team(data[battingTeam]);
-            delivery.setExtra_runs(Integer.parseInt(data[extraRuns]));
-            delivery.setBowler(data[bowler]);
-            delivery.setTotal_runs(Integer.parseInt(data[totalRuns]));
+            delivery.setMatch_id(Integer.parseInt(deliveryData[DELIVERY_MATCH_ID]));
+            delivery.setBatting_team(deliveryData[BOWLING_TEAM]);
+            delivery.setBowler(deliveryData[BOWLER]);
+            delivery.setInning(Integer.parseInt(deliveryData[BALL]));
+            delivery.setExtra_runs(Integer.parseInt(deliveryData[EXTRA_RUNS]));
+            delivery.setExtra_runs(Integer.parseInt(deliveryData[WIDE_RUNS]));
+            delivery.setExtra_runs(Integer.parseInt(deliveryData[NOBALL_RUNS]));
+            delivery.setTotal_runs(Integer.parseInt(deliveryData[TOTAL_RUNS]));
 
             deliveriesData.add(delivery);
         }
         return deliveriesData;
     }
-    private static void noOfMatchesWonByTeams(List<Matches> matchesData) {
-        Map<String, Map<String,Integer>> noOfMatchesWonByTeams=new HashMap<>();
+    private static void findNoOfMatchesWonByTeams(List<Matches> matchesData) {
+        Map<Integer, Integer> matchesPerSeason = new TreeMap<Integer, Integer>();
 
-        for(Matches list:matchesData)
+        for(Matches match :matchesData)
         {
-            if(noOfMatchesWonByTeams.containsKey(list.getWinner()))
-            {
-                Map<String,Integer> seasonWiseWinningCount=noOfMatchesWonByTeams.get(list.getWinner());
-
-                if(seasonWiseWinningCount.containsKey(list.getSeason()))
-                {
-                    int get=seasonWiseWinningCount.get(list.getSeason());
-                    seasonWiseWinningCount.put(list.getSeason(),get+1);
-                }
-                else
-                {
-                    seasonWiseWinningCount.put(list.getSeason(),1);
-                }
-                noOfMatchesWonByTeams.put(list.getWinner(),seasonWiseWinningCount);
-            }
-            else
-            {
-                Map<String,Integer> seasonWiseWin=new HashMap<>();
-                seasonWiseWin.put(list.getSeason(),1);
-                noOfMatchesWonByTeams.put(list.getWinner(),seasonWiseWin);
+            try {
+                matchesPerSeason.put((match.getSeason()), matchesPerSeason.get(match.getSeason()) + 1);
+            } catch (Exception e) {
+                matchesPerSeason.put(match.getSeason(), 1);
             }
         }
-        for (String keys : noOfMatchesWonByTeams.keySet())
-        {
-            //System.out.println(keys + ":"+ noOfMatchesWonByTeams.get(keys));
+        System.out.println("Number of matches played per year of all the years in IPL");
+        for (Map.Entry<Integer, Integer> item : matchesPerSeason.entrySet()) {
+            System.out.print(item.getKey());
+            System.out.print(" - ");
+            System.out.println(item.getValue());
         }
     }
-    private static void noOfMatchesPlayedPerYear(List<Matches> matchesData) {
-        Map<String,Integer> noOfMatchesPlayedPerYear=new HashMap<>();
 
-        for(Matches list:matchesData)
-        {
-            if(noOfMatchesPlayedPerYear.containsKey(list.getSeason()))
-            {
-                int get=noOfMatchesPlayedPerYear.get(list.getSeason());
-                noOfMatchesPlayedPerYear.put(list.getSeason(),get+1);
-            }
-            else
-            {
-                noOfMatchesPlayedPerYear.put(list.getSeason(),1);
+    private static void findNoOfMatchesPlayedPerYear(List<Matches> matchesData) {
+        Map<String, Integer> noOfMatchesPlayedPerYear = new HashMap<>();
+
+        for (Matches match : matchesData) {
+            try {
+                noOfMatchesPlayedPerYear.put((match.getWinner()), noOfMatchesPlayedPerYear.get(match.getWinner()) + 1);
+            } catch (Exception e) {
+                noOfMatchesPlayedPerYear.put(match.getWinner(), 1);
             }
         }
         System.out.println("No. of matches played per year :");
-        for (String keys : noOfMatchesPlayedPerYear.keySet())
-        {
-            System.out.println(keys + ":"+ noOfMatchesPlayedPerYear.get(keys));
+        for (Map.Entry<String, Integer> item : noOfMatchesPlayedPerYear.entrySet()) {
+            if (!item.getKey().equals("")) {
+                System.out.println("Team "+item.getKey()+" Won "+item.getValue()+" matches" );
+            }
         }
     }
+
 
 
     private static Map<Integer, String> getMatchID_Season(List<Matches> matchesData) {
