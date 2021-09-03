@@ -3,8 +3,8 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.*;
 import java.util.*;
+import java.lang.*;
 
 public class Main {
     public static final int MATCH_ID = 0;
@@ -22,7 +22,6 @@ public class Main {
     public static final int EXTRA_RUNS = 16;
     public static final int TOTAL_RUNS = 17;
 
-
     public static void main(String[] args) throws IOException {
         List<Matches> matchesData = getMatchesData();
         List<Deliveries> deliveryData = getDeliveriesData();
@@ -31,15 +30,15 @@ public class Main {
         findExtraRunsPerTeamIn2016(deliveryData,matchesData);
         findEconomicalBowlerIn2015(deliveryData,matchesData);
         findTossWonByEachTeamIn2017(matchesData);
-
     }
+
     private static List<Matches> getMatchesData() throws IOException {
-        String path = "src/com/company/matches.csv";
         List<Matches> matchesData = new ArrayList<>();
 
+        String path = "src/com/company/matches.csv";
         BufferedReader br = new BufferedReader(new FileReader(path));
 
-        String line;
+        String line = "";
         int skipLine = 0;
 
         while((line = br.readLine()) != null)
@@ -55,9 +54,10 @@ public class Main {
 
             match.setMatch_Id(Integer.parseInt(singleMatch[MATCH_ID]));
             match.setSeason(Integer.parseInt(singleMatch[SEASON]));
-            if(singleMatch[MATCH_WINNER].equals("") || singleMatch[MATCH_WINNER]==null) match.setWinner("Draw");
+            if(singleMatch[MATCH_WINNER].equals("")) match.setWinner("Draw");
             else match.setWinner(singleMatch[MATCH_WINNER]);
             match.setToss_winner(singleMatch[TOSS_WINNER]);
+
             matchesData.add(match);
         }
         return matchesData;
@@ -97,7 +97,7 @@ public class Main {
     }
 
     private static void findNoOfMatchesWonByTeams(List<Matches> matchesData) {
-        Map<Integer, Integer> matchesPerSeason = new TreeMap<Integer, Integer>();
+        Map<Integer, Integer> matchesPerSeason = new TreeMap<>();
 
         for(Matches match :matchesData)
         {
@@ -135,7 +135,7 @@ public class Main {
 
     private static void findExtraRunsPerTeamIn2016(List<Deliveries> deliveryData, List<Matches> matchesData) {
         Map<String, Integer> extraRunsPerTeam = new HashMap<>();
-        List<Integer> matchId = new ArrayList<Integer>();
+        List<Integer> matchId = new ArrayList<>();
 
         for (Matches match : matchesData) {
             if (match.getSeason() == 2016) {
@@ -161,10 +161,10 @@ public class Main {
     }
 
     private static void findEconomicalBowlerIn2015(List<Deliveries> deliveryData, List<Matches> matchesData) {
-        Map<String, Integer> bowlersRuns = new HashMap<String, Integer>();
-        Map<String, Integer> bowlersOvers = new HashMap<String, Integer>();
-        Map<Double, String> bowlersEconomy = new TreeMap<Double, String>();
-        List<Integer> matchIds = new ArrayList<Integer>();
+        Map<String, Integer> bowlersRuns = new HashMap<>();
+        Map<String, Integer> bowlersOvers = new HashMap<>();
+        Map<Double, String> bowlersEconomy = new TreeMap<>();
+        List<Integer> matchIds = new ArrayList<>();
         for (Matches item : matchesData) {
             if (item.getSeason() == 2015) {
                 matchIds.add(item.getMatch_Id());
@@ -190,8 +190,6 @@ public class Main {
         }
 
         System.out.println("Top economical bowler in IPL 2015");
-
-
         for (Map.Entry<Double, String> item : bowlersEconomy.entrySet()) {
             System.out.println(item.getValue() +" with an economy of "+ item.getKey());
             System.out.println("--------------------------------------------------------------------------------");
@@ -212,7 +210,6 @@ public class Main {
             }
         }
         System.out.println("Toss Won by each team in 2017 :");
-
         for (Map.Entry<String, Integer> item : tossWonByTeam.entrySet()){
             System.out.println(item.getKey()+" team won "+item.getValue()+" tosses.");
         }
