@@ -1,30 +1,30 @@
 package com.company;
 
-public class Matches {
-    private int match_Id;
+public class Match {
+    private int matchId;
     private int season;
     private String city;
     private String date;
     private String team1;
     private String team2;
-    private String toss_winner;
-    private String toss_decision;
+    private String tossWinner;
+    private String tossDecision;
     private String result;
-    private int dl_applied;
+    private int dlApplied;
     private String winner;
-    private int win_By_Runs;
-    private int win_By_wickets;
+    private int winByRuns;
+    private int winByWickets;
     private String playerOfTheMatch;
     private String venue;
     private String umpire1;
     private String umpire2;
 
-    public int getMatch_Id() {
-        return match_Id;
+    public int getMatchId() {
+        return matchId;
     }
 
-    public void setMatch_Id(int match_Id) {
-        this.match_Id = match_Id;
+    public void setMatchId(int matchId) {
+        this.matchId = matchId;
     }
 
     public int getSeason() {
@@ -67,20 +67,20 @@ public class Matches {
         this.team2 = team2;
     }
 
-    public String getToss_winner() {
-        return toss_winner;
+    public String getTossWinner() {
+        return tossWinner;
     }
 
-    public void setToss_winner(String toss_winner) {
-        this.toss_winner = toss_winner;
+    public void setTossWinner(String tossWinner) {
+        this.tossWinner = tossWinner;
     }
 
-    public String getToss_decision() {
-        return toss_decision;
+    public String getTossDecision() {
+        return tossDecision;
     }
 
-    public void setToss_decision(String toss_decision) {
-        this.toss_decision = toss_decision;
+    public void setTossDecision(String tossDecision) {
+        this.tossDecision = tossDecision;
     }
 
     public String getResult() {
@@ -91,12 +91,12 @@ public class Matches {
         this.result = result;
     }
 
-    public int getDl_applied() {
-        return dl_applied;
+    public int getDlApplied() {
+        return dlApplied;
     }
 
-    public void setDl_applied(int dl_applied) {
-        this.dl_applied = dl_applied;
+    public void setDlApplied(int dlApplied) {
+        this.dlApplied = dlApplied;
     }
 
     public String getWinner() {
@@ -107,20 +107,20 @@ public class Matches {
         this.winner = winner;
     }
 
-    public int getWin_By_Runs() {
-        return win_By_Runs;
+    public int getWinByRuns() {
+        return winByRuns;
     }
 
-    public void setWin_By_Runs(int win_By_Runs) {
-        this.win_By_Runs = win_By_Runs;
+    public void setWinByRuns(int winByRuns) {
+        this.winByRuns = winByRuns;
     }
 
-    public int getWin_By_wickets() {
-        return win_By_wickets;
+    public int getWinByWickets() {
+        return winByWickets;
     }
 
-    public void setWin_By_wickets(int win_By_wickets) {
-        this.win_By_wickets = win_By_wickets;
+    public void setWinByWickets(int winByWickets) {
+        this.winByWickets = winByWickets;
     }
 
     public String getPlayerOfTheMatch() {
