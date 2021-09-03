@@ -61,7 +61,7 @@ public class Main {
     }
 
     private static List<Delivery> getDeliveryData() throws IOException {
-        List<Delivery> deliverData = new ArrayList<>();
+        List<Delivery> deliveryData = new ArrayList<>();
 
         String path = "src/com/company/deliveries.csv";
         BufferedReader br = new BufferedReader(new FileReader(path));
@@ -83,23 +83,23 @@ public class Main {
             delivery.setBatsmanRuns(Integer.parseInt(data[BATSMAN_RUNS]));
             delivery.setTotalRuns(Integer.parseInt(data[TOTAL_RUNS]));
 
-            deliverData.add(delivery);
+            deliveryData.add(delivery);
         }
-        return deliverData;
+        return deliveryData;
     }
 
     private static void findNoOfMatchesWonByTeams(List<Match> matchData) {
-        Map<Integer, Integer> matchesPerSeason = new TreeMap<>();
+        Map<Integer, Integer> matchesWonPerSeason = new TreeMap<>();
 
         for (Match match : matchData) {
-            try {
-                matchesPerSeason.put((match.getSeason()), matchesPerSeason.get(match.getSeason()) + 1);
-            } catch (Exception e) {
-                matchesPerSeason.put(match.getSeason(), 1);
+            if (matchesWonPerSeason.get(match.getSeason()) != null) {
+                matchesWonPerSeason.put(match.getSeason(), matchesWonPerSeason.get(match.getSeason()) + 1);
+            } else {
+                matchesWonPerSeason.put(match.getSeason(), 1);
             }
         }
         System.out.println("Number of matches played per year of all the years in IPL");
-        for (Map.Entry<Integer, Integer> item : matchesPerSeason.entrySet()) {
+        for (Map.Entry<Integer, Integer> item : matchesWonPerSeason.entrySet()) {
             System.out.println(item.getKey() + " - " + item.getValue());
         }
         System.out.println("-----------------------------------------------------------------");
@@ -109,12 +109,13 @@ public class Main {
         Map<String, Integer> noOfMatchesWonPerYearPerTeam = new HashMap<>();
 
         for (Match match : matchData) {
-            try {
-                noOfMatchesWonPerYearPerTeam.put((match.getWinner()), noOfMatchesWonPerYearPerTeam.get(match.getWinner()) + 1);
-            } catch (Exception e) {
+            if (noOfMatchesWonPerYearPerTeam.get(match.getWinner()) != null) {
+                noOfMatchesWonPerYearPerTeam.put(match.getWinner(), noOfMatchesWonPerYearPerTeam.get(match.getWinner()) + 1);
+            } else {
                 noOfMatchesWonPerYearPerTeam.put(match.getWinner(), 1);
             }
         }
+
         System.out.println("No. of matches won  by each Team of all the IPL years :");
         for (Map.Entry<String, Integer> item : noOfMatchesWonPerYearPerTeam.entrySet()) {
             if (!item.getKey().equals("Draw")) {
@@ -135,9 +136,9 @@ public class Main {
         }
         for (Delivery delivery : deliveryData) {
             if (matchId.contains(delivery.getMatchId())) {
-                try {
+                if (extraRunsPerTeam.get(delivery.getBowling_team()) != null) {
                     extraRunsPerTeam.put(delivery.getBowling_team(), extraRunsPerTeam.get(delivery.getBowling_team()) + delivery.getExtraRuns());
-                } catch (Exception e) {
+                } else {
                     extraRunsPerTeam.put(delivery.getBowling_team(), delivery.getExtraRuns());
                 }
             }
@@ -171,7 +172,6 @@ public class Main {
                 if (bowlersOvers.get(item.getBowler()) == null) {
                     bowlersOvers.put(item.getBowler(), 0);
                 } else if (bowlersOvers.get(item.getBowler()) != null) {
-
                     bowlersOvers.put(item.getBowler(), bowlersOvers.get(item.getBowler()) + 1);
                 }
             }
@@ -193,9 +193,9 @@ public class Main {
 
         for (Match item : matchData) {
             if (item.getSeason() == 2017) {
-                try {
-                    tossWonByTeamIn2017.put((item.getTossWinner()), tossWonByTeamIn2017.get(item.getTossWinner()) + 1);
-                } catch (Exception e) {
+                if (tossWonByTeamIn2017.get(item.getTossWinner()) != null) {
+                    tossWonByTeamIn2017.put(item.getTossWinner(), tossWonByTeamIn2017.get(item.getTossWinner()) + 1);
+                } else {
                     tossWonByTeamIn2017.put(item.getTossWinner(), 1);
                 }
             }
