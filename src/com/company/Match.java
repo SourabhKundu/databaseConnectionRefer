@@ -104,7 +104,10 @@ public class Match {
     }
 
     public void setWinner(String winner) {
-        this.winner = winner;
+        if (winner == null)
+            this.winner = "Draw";
+        else
+            this.winner=winner;
     }
 
     public int getWinByRuns() {

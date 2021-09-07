@@ -1,11 +1,7 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
 import java.util.*;
-import java.lang.*;
 
 public class Main {
     public static final int MATCH_ID = 1;
@@ -13,18 +9,17 @@ public class Main {
     public static final int MATCH_WINNER = 11;
     public static final int TOSS_WINNER = 7;
 
-    public static final int DELIVERY_MATCH_ID = 0;
-    public static final int BOWLING_TEAM = 3;
-    public static final int BALL = 5;
-    public static final int BOWLER = 8;
-    public static final int WIDE_RUNS = 10;
-    public static final int NOBALL_RUNS = 13;
-    public static final int BATSMAN_RUNS = 15;
-    public static final int EXTRA_RUNS = 16;
-    public static final int TOTAL_RUNS = 17;
+    public static final int DELIVERY_MATCH_ID = 1;
+    public static final int BOWLING_TEAM = 4;
+    public static final int BALL = 6;
+    public static final int BOWLER = 9;
+    public static final int WIDE_RUNS = 11;
+    public static final int NOBALL_RUNS = 14;
+    public static final int BATSMAN_RUNS = 16;
+    public static final int EXTRA_RUNS = 17;
+    public static final int TOTAL_RUNS = 18;
 
-
-    public static void main(String[] args) throws IOException, SQLException {
+    public static void main(String[] args) {
         List<Match> matchData = getMatchData();
         List<Delivery> deliveryData = getDeliveryData();
 
@@ -34,7 +29,8 @@ public class Main {
         findTopEconomicalBowlerIn2015(deliveryData, matchData);
         findTossWonByEachTeamIn2017(matchData);
     }
-    private static Connection getConnection(){
+
+    private static Connection getConnectionToDatabase() {
         Connection connection = null;
         String POSTGRE_URL = "jdbc:postgresql://localhost:5432/sourabhkundu";
         String USERNAME = "postgres";
@@ -48,16 +44,11 @@ public class Main {
         return connection;
     }
 
-    private static List<Match> getMatchData() throws  SQLException {
+    private static List<Match> getMatchData() {
         List<Match> matchData = new ArrayList<>();
-
-        /*String path = "src/com/company/matches.csv";
-        BufferedReader br = new BufferedReader(new FileReader(path));
-
-        String line = "";
-        br.readLine();*/
-        Connection connection = getConnection();
+        Connection connection = getConnectionToDatabase();
         String query = "SELECT * FROM public.\"Matches\"";
+
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -70,46 +61,52 @@ public class Main {
 
                 match.setMatchId(id);
                 match.setSeason(season);
-                if (winner.equals(null)) {
-                    match.setWinner("Draw");
-                } else {
-                    match.setWinner(winner);
-                }
+                match.setWinner(winner);
                 match.setTossWinner(tossWinner);
 
                 matchData.add(match);
             }
             connection.close();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return matchData;
     }
 
-    private static List<Delivery> getDeliveryData() throws IOException {
+    private static List<Delivery> getDeliveryData() {
         List<Delivery> deliveryData = new ArrayList<>();
+        Connection connection = getConnectionToDatabase();
+        String query = "SELECT * FROM public.\"Deliveries\"";
 
-        String path = "src/com/company/deliveries.csv";
-        BufferedReader br = new BufferedReader(new FileReader(path));
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt(DELIVERY_MATCH_ID);
+                String bowlingTeam = resultSet.getString(BOWLING_TEAM);
+                String bowler = resultSet.getString(BOWLER);
+                int ball = resultSet.getInt(BALL);
+                int extraRuns = resultSet.getInt(EXTRA_RUNS);
+                int wideRuns = resultSet.getInt(WIDE_RUNS);
+                int noballRuns = resultSet.getInt(NOBALL_RUNS);
+                int batsmanRuns = resultSet.getInt(BATSMAN_RUNS);
+                int totalRuns = resultSet.getInt(TOTAL_RUNS);
+                Delivery delivery = new Delivery();
 
-        String line = "";
-        br.readLine();
+                delivery.setMatchId(id);
+                delivery.setBowling_team(bowlingTeam);
+                delivery.setBowler(bowler);
+                delivery.setInning(ball);
+                delivery.setExtraRuns(extraRuns);
+                delivery.setExtraRuns(wideRuns);
+                delivery.setExtraRuns(noballRuns);
+                delivery.setBatsmanRuns(batsmanRuns);
+                delivery.setTotalRuns(totalRuns);
 
-        while ((line = br.readLine()) != null) {
-            String[] data = line.split(",");
-
-            Delivery delivery = new Delivery();
-            delivery.setMatchId(Integer.parseInt(data[DELIVERY_MATCH_ID]));
-            delivery.setBowling_team(data[BOWLING_TEAM]);
-            delivery.setBowler(data[BOWLER]);
-            delivery.setInning(Integer.parseInt(data[BALL]));
-            delivery.setExtraRuns(Integer.parseInt(data[EXTRA_RUNS]));
-            delivery.setExtraRuns(Integer.parseInt(data[WIDE_RUNS]));
-            delivery.setExtraRuns(Integer.parseInt(data[NOBALL_RUNS]));
-            delivery.setBatsmanRuns(Integer.parseInt(data[BATSMAN_RUNS]));
-            delivery.setTotalRuns(Integer.parseInt(data[TOTAL_RUNS]));
-
-            deliveryData.add(delivery);
+                deliveryData.add(delivery);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return deliveryData;
     }
