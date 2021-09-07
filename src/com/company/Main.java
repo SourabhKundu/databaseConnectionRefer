@@ -3,14 +3,15 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.*;
 import java.util.*;
 import java.lang.*;
 
 public class Main {
-    public static final int MATCH_ID = 0;
-    public static final int SEASON = 1;
-    public static final int MATCH_WINNER = 10;
-    public static final int TOSS_WINNER = 6;
+    public static final int MATCH_ID = 1;
+    public static final int SEASON = 2;
+    public static final int MATCH_WINNER = 11;
+    public static final int TOSS_WINNER = 7;
 
     public static final int DELIVERY_MATCH_ID = 0;
     public static final int BOWLING_TEAM = 3;
@@ -22,7 +23,8 @@ public class Main {
     public static final int EXTRA_RUNS = 16;
     public static final int TOTAL_RUNS = 17;
 
-    public static void main(String[] args) throws IOException {
+
+    public static void main(String[] args) throws IOException, SQLException {
         List<Match> matchData = getMatchData();
         List<Delivery> deliveryData = getDeliveryData();
 
@@ -32,30 +34,54 @@ public class Main {
         findTopEconomicalBowlerIn2015(deliveryData, matchData);
         findTossWonByEachTeamIn2017(matchData);
     }
+    private static Connection getConnection(){
+        Connection connection = null;
+        String POSTGRE_URL = "jdbc:postgresql://localhost:5432/sourabhkundu";
+        String USERNAME = "postgres";
+        String PASSWORD = "Kundusahab@45";
+        try {
+            connection = DriverManager.getConnection(POSTGRE_URL, USERNAME, PASSWORD);
+        } catch (SQLException e) {
+            System.out.println("Not connected");
+            e.printStackTrace();
+        }
+        return connection;
+    }
 
-    private static List<Match> getMatchData() throws IOException {
+    private static List<Match> getMatchData() throws  SQLException {
         List<Match> matchData = new ArrayList<>();
 
-        String path = "src/com/company/matches.csv";
+        /*String path = "src/com/company/matches.csv";
         BufferedReader br = new BufferedReader(new FileReader(path));
 
         String line = "";
-        br.readLine();
-        while ((line = br.readLine()) != null) {
+        br.readLine();*/
+        Connection connection = getConnection();
+        String query = "SELECT * FROM public.\"Matches\"";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt(MATCH_ID);
+                int season = resultSet.getInt(SEASON);
+                String winner = resultSet.getString(MATCH_WINNER);
+                String tossWinner = resultSet.getString(TOSS_WINNER);
+                Match match = new Match();
 
-            String[] data = line.split(",");
-            Match match = new Match();
+                match.setMatchId(id);
+                match.setSeason(season);
+                if (winner.equals(null)) {
+                    match.setWinner("Draw");
+                } else {
+                    match.setWinner(winner);
+                }
+                match.setTossWinner(tossWinner);
 
-            match.setMatchId(Integer.parseInt(data[MATCH_ID]));
-            match.setSeason(Integer.parseInt(data[SEASON]));
-            if (data[MATCH_WINNER].equals("")) {
-                match.setWinner("Draw");
-            } else {
-                match.setWinner(data[MATCH_WINNER]);
+                matchData.add(match);
             }
-            match.setTossWinner(data[TOSS_WINNER]);
-
-            matchData.add(match);
+            connection.close();
+        }catch (Exception e) {
+            e.printStackTrace();
         }
         return matchData;
     }
